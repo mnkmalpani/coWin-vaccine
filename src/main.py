@@ -3,7 +3,7 @@ import hashlib
 from datetime import datetime
 import argparse
 from utils import *
-
+import os
 
 header = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
@@ -11,7 +11,7 @@ header = {
 
 beneficiaries_data = {}
 
-mobile = 9880267075
+mobile = os.environ.get('MOBILE')
 secret = "U2FsdGVkX1/VsmHZHLbdwntV6fMy5vTmAZhQtNlj00zdmonoostJjETavz9NKf578AFc3y1bgqAvLExdg48bRA=="
 TOKEN_VALIDITY = 840 #taking 1 min buffer
 
