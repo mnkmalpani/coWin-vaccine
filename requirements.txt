@@ -1,0 +1,5 @@
+requests
+prettytable
+2captcha-python
+pysimplegui
+svglib==1.0.1
