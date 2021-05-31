@@ -4,7 +4,7 @@ from reportlab.graphics import renderPM
 import re
 from twocaptcha import TwoCaptcha
 import sys
-import os
+from decouple import config
 
 def captcha_builder(resp):
     with open('../captcha.svg', 'w') as f:
@@ -13,9 +13,8 @@ def captcha_builder(resp):
     drawing = svg2rlg('../captcha.svg')
     renderPM.drawToFile(drawing, "captcha.png", fmt="PNG")
 
-    api_key = 'b9f8e9e1521dafe55f2ff2dbb74d4895'
     #solved using 2Captcha
-    solver = TwoCaptcha(os.environ.get('API_KEY'))
+    solver = TwoCaptcha(config('API_KEY'))
     try:
         result = solver.normal('captcha.png')
 

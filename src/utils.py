@@ -28,6 +28,15 @@ secret = "U2FsdGVkX1/VsmHZHLbdwntV6fMy5vTmAZhQtNlj00zdmonoostJjETavz9NKf578AFc3y
 TOKEN_VALIDITY = 840 #taking 1 min buffer
 
 
+def check_token_status(authentication, header):
+    header["Authorization"] = authentication
+    url = coWinUrl + resources.get('beneficiaries')
+    response = requests.get(url, headers=header)
+    if response.status_code != 200:
+        return True
+    else:
+        return False
+
 def generate_otp(mobile, header, secret):
     data = {
         'mobile': mobile,
@@ -136,14 +145,19 @@ def getDateFromUser():
         sys.exit(1)
 
 
-def getSessionsByDistrict(district, date, header):
-    session_path = f"/api/v2/appointment/sessions/public/findByDistrict?district_id={district}&date={date}"
-    url = coWinUrl + session_path
-    response = requests.get(url=url, headers=header)
-    if response.status_code != 200:
-        print("Somthing went wrong, regenerating otp")
-    else:
-        return response.json()
+def getSessionsByDistrict(districts, date, header):
+    all_sessions = []
+    for district in districts:
+        session_path = f"/api/v2/appointment/sessions/public/findByDistrict?district_id={district}&date={date}"
+        url = coWinUrl + session_path
+        response = requests.get(url=url, headers=header)
+        if response.status_code != 200:
+            print("Somthing went wrong while fetching the sessions, coWin must be under heavy traffic. Please try later!")
+            sys.exit(1)
+        else:
+            curr_dist_session_list = response.json()
+            all_sessions.extend(curr_dist_session_list.get('sessions', []))
+    return {'sessions': all_sessions}
 
 
 def getUserConditions():

@@ -3,7 +3,7 @@ import hashlib
 from datetime import datetime
 import argparse
 from utils import *
-import os
+from decouple import config
 
 header = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
@@ -11,7 +11,7 @@ header = {
 
 beneficiaries_data = {}
 
-mobile = os.environ.get('MOBILE')
+mobile = config('MOBILE')
 secret = "U2FsdGVkX1/VsmHZHLbdwntV6fMy5vTmAZhQtNlj00zdmonoostJjETavz9NKf578AFc3y1bgqAvLExdg48bRA=="
 TOKEN_VALIDITY = 840 #taking 1 min buffer
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     state = input("Select the state: ")
     districts_response = getDistricts(state, header)
     showDistricts(districts_response)
-    district = int(input("Select the district: "))
+    districts = [int(x) for x in input("Select the district: ").split()]
 
     # select date
     date = getDateFromUser()
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     while (True):
         # find session
-        sessions_dict = getSessionsByDistrict(district, date, header)
+        sessions_dict = getSessionsByDistrict(districts, date, header)
         sessions_list = sessions_dict.get("sessions", [])
 
         mini_slot = len(selection)
@@ -95,6 +95,9 @@ if __name__ == '__main__':
                             # generate otp
                             token = str(input("Please paste the new token: "))
                             authentication = f"Bearer {token}"
+                            if not check_token_status(authentication=authentication, header=header):
+                                print("token Not valid, try again")
+                                sys.exit(1)
                             token_generated_time = datetime.now()
                     else:
                         print(response.json())
@@ -106,4 +109,7 @@ if __name__ == '__main__':
             print("Token is Invalid")
             token = str(input("Please paste the new token: "))
             authentication = f"Bearer {token}"
+            if not check_token_status(authentication=authentication, header=header):
+                print("token Not valid, try again")
+                sys.exit(1)
             token_generated_time = datetime.now()

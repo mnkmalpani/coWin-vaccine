@@ -3,4 +3,4 @@ prettytable
 2captcha-python
 pysimplegui
 svglib==1.0.1
-python-dotenv
+python-decouple #this is to use .env file variables
