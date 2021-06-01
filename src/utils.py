@@ -3,6 +3,7 @@ from captcha import captcha_builder
 from datetime import date, datetime, timedelta
 import requests
 import sys
+import hashlib
 
 resources = {
     'generateMobileOTP': "/api/v2/auth/generateMobileOTP",
@@ -16,8 +17,18 @@ resources = {
 
 coWinUrl = "https://cdn-api.co-vin.in"
 
+header_otp = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+}
+
 header = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+    , 'content-type': 'application/json'
+    , 'origin': 'https://selfregistration.cowin.gov.in'
+    , 'sec-fetch-site': 'cross-site'
+    , 'sec-fetch-mode': 'cors'
+    , 'sec-fetch-dest': 'empty'
+    , 'referer': 'https://selfregistration.cowin.gov.in/'
 }
 
 beneficiaries_data = {}
@@ -25,7 +36,7 @@ states = {}
 
 mobile = 9880267075
 secret = "U2FsdGVkX1/VsmHZHLbdwntV6fMy5vTmAZhQtNlj00zdmonoostJjETavz9NKf578AFc3y1bgqAvLExdg48bRA=="
-TOKEN_VALIDITY = 840 #taking 1 min buffer
+TOKEN_VALIDITY = 840  # taking 1 min buffer
 
 
 def check_token_status(authentication, header):
@@ -36,6 +47,7 @@ def check_token_status(authentication, header):
         return True
     else:
         return False
+
 
 def generate_otp(mobile, header, secret):
     data = {
@@ -152,7 +164,8 @@ def getSessionsByDistrict(districts, date, header):
         url = coWinUrl + session_path
         response = requests.get(url=url, headers=header)
         if response.status_code != 200:
-            print("Somthing went wrong while fetching the sessions, coWin must be under heavy traffic. Please try later!")
+            print(
+                "Somthing went wrong while fetching the sessions, coWin must be under heavy traffic. Please try later!")
             sys.exit(1)
         else:
             curr_dist_session_list = response.json()
@@ -184,6 +197,7 @@ def getUserConditions():
 
     return fee_type, fee_type_flag, vaccine_type, vaccine_flag
 
+
 def generate_captcha(request_header):
     print('================================= GETTING CAPTCHA ==================================================')
     CAPTCHA_URL = coWinUrl + resources.get('getRecaptcha')
@@ -191,7 +205,8 @@ def generate_captcha(request_header):
     print(f'Captcha Response Code: {resp.status_code}')
 
     if resp.status_code == 200:
-       return captcha_builder(resp.json())
+        return captcha_builder(resp.json())
+
 
 def book_slot(header, mini_slot, session_id, slot, beneficiary_reference_ids):
     url = coWinUrl + resources.get('schedule')
@@ -204,3 +219,15 @@ def book_slot(header, mini_slot, session_id, slot, beneficiary_reference_ids):
     captcha = generate_captcha(request_header=header)
     data['captcha'] = captcha
     return requests.post(url=url, json=data, headers=header)
+
+def generate_and_validate_otp(mobile, header_otp, secret):
+    # generate otp
+    generate_respose = generate_otp(mobile, header_otp, secret)
+    print("generate_respose recevied: ", generate_respose)
+    # enter Otp
+    otp = input("enter the otp: ")
+    hashed_otp = hashlib.sha256(str(otp).encode('UTF-8')).hexdigest()
+    token_json = authenticateOtp(hashed_otp, generate_respose)
+    print("Token recevied: ", token_json)
+    # collect Barer token to check validity of the session
+    return token_json.get("token")
