@@ -28,6 +28,5 @@ python src\main.py --token=YOUR-TOKEN-HERE
 ### Third-Party Package Dependency:
 - ```PrettyTable``` : For displaying data in tabular format.
 - ```requests``` : For making GET and POST requests to the API.
-- ```twocaptcha``` : For verifying the captcha
 - ```decouple``` : For picking values from an env file
 - ```svglib``` : For rendering the captcha

@@ -89,7 +89,6 @@ if __name__ == '__main__':
                         print("Somthing went wrong, checking next available slot")
                     else:
                         print('##############    BOOKED!  ############################    BOOKED!  ##############')
-                        print("                        Hey, Hey, Hey! It's your lucky day!                       ")
                         print('\nPress any key thrice to exit program.')
                         os.system("pause")
                         os.system("pause")
