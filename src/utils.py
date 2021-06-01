@@ -32,7 +32,7 @@ def check_token_status(authentication, header):
     header["Authorization"] = authentication
     url = coWinUrl + resources.get('beneficiaries')
     response = requests.get(url, headers=header)
-    if response.status_code != 200:
+    if response.status_code == 200:
         return True
     else:
         return False

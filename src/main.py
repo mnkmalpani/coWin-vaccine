@@ -103,7 +103,7 @@ if __name__ == '__main__':
                         print(response.json())
                         sys.exit(0)
 
-        print("No slots found, checking again")
+        print("No slots found, checking again. Token validity time remaning: ", (datetime.now() - token_generated_time).seconds)
         # check validity
         if (datetime.now() - token_generated_time).seconds > TOKEN_VALIDITY:
             print("Token is Invalid")
