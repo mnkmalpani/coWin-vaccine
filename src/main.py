@@ -2,7 +2,6 @@ import sys
 from datetime import datetime
 import argparse
 from utils import *
-from decouple import config
 import os
 
 header_otp = {
