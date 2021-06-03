@@ -27,11 +27,16 @@ TOKEN_VALIDITY = 840  # taking 1 min buffer
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--token', help='Pass token directly')
+    parser.add_argument('--auto', help='otp automatic reading capability')
     args = parser.parse_args()
 
     if not args.token:
         mobile = int(input("Please enter your mobile number without extension code: ").strip())
-        token = generate_and_validate_otp(mobile, header_otp, secret)
+        if not args.auto:
+            token = generate_and_validate_otp(mobile, header_otp, secret, False)
+        else:
+            print("Auto otp fetch and verification enabled")
+            token = generate_and_validate_otp(mobile, header_otp, secret, True)
     else:
         token = args.token
 
@@ -100,7 +105,11 @@ if __name__ == '__main__':
         # check validity
         if (datetime.now() - token_generated_time).seconds > TOKEN_VALIDITY:
             print("Token is Invalid")
-            token = generate_and_validate_otp(mobile, header_otp, secret)
+            if not args.auto:
+                token = generate_and_validate_otp(mobile, header_otp, secret, False)
+            else:
+                print("Automation enabled")
+                token = generate_and_validate_otp(mobile, header_otp, secret, True)
             authentication = f"Bearer {token}"
             if not check_token_status(authentication=authentication, header=header):
                 print("token Not valid, try again")

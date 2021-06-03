@@ -1,11 +1,11 @@
 
-ypython:S15425"URename function "authenticateOtp" to match the regular expression ^[a-z_][a-z0-9_]*$.(¤ÉËªûÿÿÿÿ8é¿Û›œ/
-upython:S1542‰"URename function "getDateFromUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(¡–İ‚8é¿Û›œ/
-rpython:S1542"SRename function "showDistricts" to match the regular expression ^[a-z_][a-z0-9_]*$.(ª¬¼8é¿Û›œ/
-Špython:S11920"fDefine a constant instead of duplicating this literal "Somthing went wrong, regenerating otp" 4 times.(İÁ¤¤şÿÿÿÿ8é¿Û›œ/
-qpython:S1542v"RRename function "getDistricts" to match the regular expression ^[a-z_][a-z0-9_]*$.(àßÀÌ8é¿Û›œ/
-}python:S1542M"^Rename function "showBeneficiariesDetails" to match the regular expression ^[a-z_][a-z0-9_]*$.(ø²éÙ8é¿Û›œ/
-opython:S1542m"PRename function "showStates" to match the regular expression ^[a-z_][a-z0-9_]*$.(šÓ™Ø8é¿Û›œ/
-|python:S1542£"WRename function "getUserConditions" to match the regular expression ^[a-z_][a-z0-9_]*$.(¡øøÿÿÿÿ8é¿Û›œ/
-spython:S1542c"ORename function "getStates" to match the regular expression ^[a-z_][a-z0-9_]*$.(¾»°üÿÿÿÿ8é¿Û›œ/
-€python:S1542”"[Rename function "getSessionsByDistrict" to match the regular expression ^[a-z_][a-z0-9_]*$.(ş¤®¾ûÿÿÿÿ8é¿Û›œ/
+spython:S1542‹"SRename function "showDistricts" to match the regular expression ^[a-z_][a-z0-9_]*$.(ª¬¼8é¿Û›œ/
+opython:S1542y"PRename function "showStates" to match the regular expression ^[a-z_][a-z0-9_]*$.(šÓ™Ø8é¿Û›œ/
+|python:S1542°"WRename function "getUserConditions" to match the regular expression ^[a-z_][a-z0-9_]*$.(¡øøÿÿÿÿ8é¿Û›œ/
+ypython:S1542A"URename function "authenticateOtp" to match the regular expression ^[a-z_][a-z0-9_]*$.(¤ÉËªûÿÿÿÿ8é¿Û›œ/
+spython:S1542o"ORename function "getStates" to match the regular expression ^[a-z_][a-z0-9_]*$.(¾»°üÿÿÿÿ8é¿Û›œ/
+}python:S1542Y"^Rename function "showBeneficiariesDetails" to match the regular expression ^[a-z_][a-z0-9_]*$.(ø²éÙ8é¿Û›œ/
+upython:S1542•"URename function "getDateFromUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(¡–İ‚8é¿Û›œ/
+€python:S1542 "[Rename function "getSessionsByDistrict" to match the regular expression ^[a-z_][a-z0-9_]*$.(ş¤®¾ûÿÿÿÿ8é¿Û›œ/
+Špython:S1192<"fDefine a constant instead of duplicating this literal "Somthing went wrong, regenerating otp" 4 times.(İÁ¤¤şÿÿÿÿ8é¿Û›œ/
+rpython:S1542‚"RRename function "getDistricts" to match the regular expression ^[a-z_][a-z0-9_]*$.(àßÀÌ8é¿Û›œ/

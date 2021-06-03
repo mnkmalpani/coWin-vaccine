@@ -4,6 +4,8 @@ from datetime import date, datetime, timedelta
 import requests
 import sys
 import hashlib
+from decouple import config
+import time
 
 resources = {
     'generateMobileOTP': "/api/v2/auth/generateMobileOTP",
@@ -69,10 +71,13 @@ def authenticateOtp(hashed_otp, generate_respose):
     }
     url = coWinUrl + resources.get("validateMobileOtp")
     response = requests.post(url=url, json=data, headers=header)
-    if response.status_code != 200:
-        print("Somthing went wrong, regenerating otp")
-    else:
+    if response.status_code == 401:
+        print("Unauthenticated Access, please check your otp")
+    elif response.status_code == 200:
         return response.json()
+    else:
+        print("Bad Request or Internal Server Error while authentication otp")
+        sys.exit(1)
 
 
 def beneficiaries(authentication, header):
@@ -220,12 +225,32 @@ def book_slot(header, mini_slot, session_id, slot, beneficiary_reference_ids):
     data['captcha'] = captcha
     return requests.post(url=url, json=data, headers=header)
 
-def generate_and_validate_otp(mobile, header_otp, secret):
+def generate_and_validate_otp(mobile, header_otp, secret, auto):
     # generate otp
+    global otp_message
     generate_respose = generate_otp(mobile, header_otp, secret)
     print("generate_respose recevied: ", generate_respose)
     # enter Otp
-    otp = input("enter the otp: ")
+    if not auto:
+        otp = input("enter the otp: ")
+    else:
+        print("Fetching otp after 10secs")
+        time.sleep(10)
+        i = 1
+        while i <= 6:
+            kvdb_url = config('KVDB_URL') + '/' + str(mobile)
+            otp_message_response = requests.get(kvdb_url)
+            otp_message = otp_message_response.text
+            print("otp_message output:", otp_message)
+            if len(otp_message) == 0:
+                i = i + 1
+                time.sleep(5)
+            else:
+                i = 999
+        if i == 7:
+            print("No otp received from kvdb.io, please try again")
+            sys.exit(1)
+        otp = otp_message[37:43]
     hashed_otp = hashlib.sha256(str(otp).encode('UTF-8')).hexdigest()
     token_json = authenticateOtp(hashed_otp, generate_respose)
     print("Token recevied: ", token_json)
