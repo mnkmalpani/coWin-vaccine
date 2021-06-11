@@ -181,7 +181,7 @@ def getSessionsByDistrict(districts, date, header):
 def getUserConditions():
     fee_type_flag = True
     vaccine_flag = True
-    fee_type_preference = int(input("Select the fee type: 1) Free  2) paid, enter) No preference :") or "0")
+    fee_type_preference = int(input("Select the fee type: 1) Free  2) paid, enter) No preference : ") or "0")
     if fee_type_preference == 1:
         fee_type = 'Free'
     elif fee_type_preference == 2:
@@ -191,7 +191,7 @@ def getUserConditions():
         fee_type_flag = False
 
     vaccine_type_preference = int(
-        input("Select the Vaccine type: 1) Covaxine  2) Covishield, enter) No preference :") or "0")
+        input("Select the Vaccine type: 1) Covaxine  2) Covishield, enter) No preference : ") or "0")
     if vaccine_type_preference == 1:
         vaccine_type = 'COVAXIN'
     elif vaccine_type_preference == 2:
@@ -200,7 +200,10 @@ def getUserConditions():
         vaccine_type = ''
         vaccine_flag = False
 
-    return fee_type, fee_type_flag, vaccine_type, vaccine_flag
+    dose_number_preference = int(
+        input("Is this your 1st dose or 2nd: 1) dos1  2) dos2, enter) default dos1 : ") or "1")
+
+    return fee_type, fee_type_flag, vaccine_type, vaccine_flag, dose_number_preference
 
 
 def generate_captcha(request_header):
@@ -213,16 +216,18 @@ def generate_captcha(request_header):
         return captcha_builder(resp.json())
 
 
-def book_slot(header, mini_slot, session_id, slot, beneficiary_reference_ids):
+def book_slot(header, mini_slot, session_id, slot, beneficiary_reference_ids, center_id):
     url = coWinUrl + resources.get('schedule')
     data = {
+        'center_id': center_id,
         'dose': mini_slot,
         'session_id': session_id,
         'slot': slot,
         'beneficiaries': beneficiary_reference_ids
     }
-    captcha = generate_captcha(request_header=header)
-    data['captcha'] = captcha
+    # captcha = generate_captcha(request_header=header)
+    # data['captcha'] = captcha
+    print("Requested data to book slot: ", data)
     return requests.post(url=url, json=data, headers=header)
 
 def generate_and_validate_otp(mobile, header_otp, secret, auto):

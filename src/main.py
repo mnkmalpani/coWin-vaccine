@@ -64,20 +64,31 @@ if __name__ == '__main__':
     date = getDateFromUser()
 
     # get list of conditions
-    fee_type, fee_type_flag, vaccine, vaccine_flag = getUserConditions()
+    fee_type, fee_type_flag, vaccine, vaccine_flag, dose_number_preference = getUserConditions()
+
+    #get the min age
+    ages = []
+    for index in selection:
+        ages.append(beneficiaries_data.get(index).get('age'))
+    min_age_limit = 18 if max(ages) < 45 else 45
+    print(f"min_age_limit: {min_age_limit}")
+
+    #min slot required
+    mini_slot = len(selection)
 
     while (True):
         # find session
         sessions_dict = getSessionsByDistrict(districts, date, header)
         sessions_list = sessions_dict.get("sessions", [])
 
-        mini_slot = len(selection)
-        min_age_limit = 18  # TODO should come from my selection
-
         for item in sessions_list:
             # create condition list
             condition = [item.get('min_age_limit') == min_age_limit,
-                         item.get('available_capacity') >= mini_slot]
+                         item.get('available_capacity') > mini_slot]
+            if dose_number_preference == 2:
+                condition.append(item.get('available_capacity_dose2') > mini_slot)
+            else:
+                condition.append(item.get('available_capacity_dose1') > mini_slot)
             if fee_type_flag:
                 condition.append(fee_type == item.get('fee_type'))
             if vaccine_flag:
@@ -88,7 +99,7 @@ if __name__ == '__main__':
                     print("Slot available: ", item)
                     header["Authorization"] = authentication
                     response = book_slot(header=header, mini_slot=mini_slot, session_id=item.get('session_id'),
-                                         slot=slot, beneficiary_reference_ids=beneficiary_reference_ids)
+                                         slot=slot, beneficiary_reference_ids=beneficiary_reference_ids, center_id=item.get("center_id"))
                     print("Booking response: ", response)
                     if response.status_code != 200:
                         print("Somthing went wrong, checking next available slot")
