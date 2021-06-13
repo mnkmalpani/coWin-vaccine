@@ -84,11 +84,11 @@ if __name__ == '__main__':
         for item in sessions_list:
             # create condition list
             condition = [item.get('min_age_limit') == min_age_limit,
-                         item.get('available_capacity') > mini_slot]
+                         item.get('available_capacity') >= mini_slot]
             if dose_number_preference == 2:
-                condition.append(item.get('available_capacity_dose2') > mini_slot)
+                condition.append(item.get('available_capacity_dose2') >= mini_slot)
             else:
-                condition.append(item.get('available_capacity_dose1') > mini_slot)
+                condition.append(item.get('available_capacity_dose1') >= mini_slot)
             if fee_type_flag:
                 condition.append(fee_type == item.get('fee_type'))
             if vaccine_flag:
